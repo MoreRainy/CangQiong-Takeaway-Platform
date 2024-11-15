@@ -11,7 +11,7 @@ import com.sky.entity.DishFlavor;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
-import com.sky.mapper.SetMealDishMapper;
+import com.sky.mapper.SetmealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -34,7 +34,7 @@ public class DishServiceImpl implements DishService {
     private DishFlavorMapper dishFlavorMapper;
 
     @Autowired
-    private SetMealDishMapper setMealDishMapper;
+    private SetmealDishMapper setMealDishMapper;
 
     /**
      * 新增菜品和对应的口味数据
@@ -96,7 +96,7 @@ public class DishServiceImpl implements DishService {
         }
 
         //判断当前菜品是否能够删除——是否被套餐关联
-        List<Long> setMealIds = setMealDishMapper.getSetMealByDishIds(ids);
+        List<Long> setMealIds = setMealDishMapper.getSetmealByDishIds(ids);
 
         if (setMealIds != null && setMealIds.size() > 0) {
             //当前菜品被套餐关联，不能删除
@@ -163,5 +163,21 @@ public class DishServiceImpl implements DishService {
 
             dishFlavorMapper.insertBatch(flavors);
         }
+    }
+
+    /**
+     * 根据分类id查询菜品
+     *
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public List<Dish> queryByCategoryId(Long categoryId) {
+        Dish dish = Dish.builder()
+                .categoryId(categoryId)
+                .status(StatusConstant.ENABLE)
+                .build();
+
+        return dishMapper.queryByCategoryId(dish);
     }
 }
